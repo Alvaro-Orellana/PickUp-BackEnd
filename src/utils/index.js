@@ -49,7 +49,7 @@ const validateEmail = (value) => {
 
 const validateUser = (usuario) => {
 
-    return validarEmail(usuario.email) &&
+    return validateEmail(usuario.email) &&
         (usuario.nombre.length > 0) &&
         (usuario.apellido.length > 0) &&
         (usuario.password.length > 4) &&

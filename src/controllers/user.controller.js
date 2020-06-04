@@ -1,8 +1,11 @@
-const { OK } = require( 'http-status')
-const { success } = require( '../middlewares/success.middleware')
+const { OK } = require('http-status')
+const { success } = require('../middlewares/success.middleware')
+const { validateUser } = require('../utils')
+const { error } = require('../middlewares/error.middleware')
 
 const register = async (req, res) => {
-    res.status(OK).json(success({}))
+    (validateUser(req.body))?res.status(OK).json(success((req.body))):res.status(500).json(error('No se puede registrar',500))
+   
 }
 
 const login = async (req, res) => {
