@@ -1,6 +1,10 @@
-// Aca van las llamadas a firebase
+const { db } = require('./database')
 
-const fetchUserById = async (id) => await
-    Promise.all([])
+
+
+
+const fetchUserById = async (id) => {
+    
+}
 
 module.exports = fetchUserById

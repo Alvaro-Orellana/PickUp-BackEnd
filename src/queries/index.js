@@ -1,1 +1,1 @@
-export { fetchUserById } from './user.query'
+export { login2 } from './auth.query'
