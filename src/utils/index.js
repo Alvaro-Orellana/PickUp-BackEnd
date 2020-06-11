@@ -50,7 +50,7 @@ const validateEmail = (value) => {
 const validateUser = (usuario) => {
 
     return validateEmail(usuario.email) &&
-        (usuario.nombre.length > 0) &&
+        (usuario.name.length > 0) &&
         (usuario.apellido.length > 0) &&
         (usuario.password.length > 4) &&
         (usuario.password == usuario.confirmpw)

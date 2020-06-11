@@ -13,10 +13,17 @@ const login2 = async (email, password) => {
 
 }
 
-const register = async (user) => {
-    const userExist = await getUserByEmail(email)
+
+
+const register2 = async (user) => {
+    const userExist = await getUserByEmail(user.email)
     if (!userExist) {
-        await auth.createUserWithEmailAndPassword(user.email, user.password)
+        try {
+            await auth.createUserWithEmailAndPassword(user.email, user.password)
+            await saveUser(user)
+        } catch (err) {
+            console.log(err)
+        }
 
 
     } else {
@@ -25,13 +32,37 @@ const register = async (user) => {
 
 }
 
+const mostrar = async () => {
+
+    const userRefs = db.collection(USERS_COLLECTION)
+    let users = []
+    userRefs.get()
+        .then(snapshot => {
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    console.log(data.email)
+                    users.push({
+                        name: data.name,
+                        email: data.email
+                    })
+                })
+            }
+            return users;
+        }).catch(err => {
+            console.log(`Error getting the document : ${err}`)
+        })
+}
+
+
 const saveUser = async (user) => {
 
     const userRefs = db.collection('users');
-    await userRefs.doc(USERS_COLLECTION).set(user)
+    await userRefs.doc(user.email).set(user)
 }
 
 const getUserByEmail = async (email) => {
+
     const userRefs = db.collection(USERS_COLLECTION)
     let user = {}
     userRefs.where('email', '==', email).limit(1).get()
@@ -47,10 +78,11 @@ const getUserByEmail = async (email) => {
                     }
                 })
             }
+            console.log(user)
             return user;
         }).catch(err => {
             console.log(`Error getting the document : ${err}`)
         })
 }
 
-module.exports = { login2, register }
+module.exports = { login2, register2, mostrar }
