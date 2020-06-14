@@ -4,7 +4,7 @@ const { validateUser } = require('../utils')
 const { error } = require('../middlewares/error.middleware')
 const { login2 } = require('../queries/auth.query')
 const { register2 } = require('../queries/auth.query')
-const { mostrar } = require('../queries/auth.query')
+
 
 
 const register = async (req, res) => {
@@ -25,9 +25,8 @@ const login = async (req, res) => {
 }
 
 
-
 const loginTest = async (req, res) => {
-    
+
     await login2(req.body.email, req.body.password)
     res.status(OK).json(success({}))
 }
