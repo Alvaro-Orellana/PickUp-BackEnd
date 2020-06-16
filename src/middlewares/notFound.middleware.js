@@ -1,5 +1,5 @@
 const { NOT_FOUND } = require( 'http-status')
-const { error } = require(".");
+const { error } = require("./error.middleware");
 const { errorMessages } = require( "../constants");
 
 const notFound = (req, res) => res.status(NOT_FOUND)

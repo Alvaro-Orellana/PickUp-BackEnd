@@ -21,4 +21,12 @@ const codeErrorIndex = {
   500: 'INTERNAL_SERVER_ERROR',
 }
 
-module.exports = { environment, errorMessages, codeErrorIndex }
+const jwtScopes = {
+  RU: 'read:users',
+  MU: 'modify:users',
+  MR: 'modify:reservas',
+  RR: 'modify:reservas',
+  ALL: '*'
+};
+
+module.exports = { environment, errorMessages, codeErrorIndex, jwtScopes }

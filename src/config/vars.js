@@ -7,5 +7,7 @@ const OAuthApiKey = process.env.OAUTH_API_KEY
 const portNumber = process.env.PORT || 8080
 const databaseUrl = process.env.DATABASE_URL || ""
 const USERS_COLLECTION = process.env.USERS_COLLECTION || ""
+const RESERVAS_COLLECTION = process.env.RESERVAS_COLLECTION || ""
 
-module.exports =  { env, OAuthApiKey, portNumber, USERS_COLLECTION }
+
+module.exports =  { env, OAuthApiKey, portNumber, USERS_COLLECTION, RESERVAS_COLLECTION }

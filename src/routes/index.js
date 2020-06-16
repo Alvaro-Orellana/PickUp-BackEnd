@@ -4,7 +4,7 @@ const publicRoutes = require( './v1/public')
 
 const router = Router()
 
-//router.use('/', apiRoutes)
+router.use('/', apiRoutes)
 router.use('/public', publicRoutes)
 
 module.exports = router

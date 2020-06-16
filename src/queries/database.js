@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require("../config/serviceAccountKey.json");
 const firebase = require('firebase/app')
 require('firebase/auth')
-
+require('firebase/firestore')
 const firebaseConfig = {
     apiKey: "AIzaSyAzpCvoXPlnvcRT3Cod8aS6saQ9nDmAZO0",
     authDomain: "pick-up-a3469.firebaseapp.com",
@@ -22,9 +22,7 @@ admin.initializeApp({
 
 firebase.initializeApp(firebaseConfig)
 
-const db = admin.firestore()
-const auth = firebase.auth()
 
+const db = firebase.firestore()
 
-
-module.exports = { db, auth }
+module.exports = { admin, firebase, db }

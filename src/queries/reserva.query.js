@@ -1,0 +1,68 @@
+const { admin, firebase } = require('./database')
+const { USERS_COLLECTION, RESERVAS_COLLECTION } = require('../config/vars')
+
+const fetchReservaByCod = async (cod) => {
+    const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
+    let reserva = {}
+    reservaRefs.where('cod', '==', cod).limit(1).get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                console.log("Reserva no existe en la base")
+            } else {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+
+                    reserva = {
+                        cod: data.cod
+                    }
+                })
+            }
+            console.log(reserva)
+            return reserva;
+        }).catch(err => {
+            console.log(`Error getting the document : ${err}`)
+        })
+}
+
+
+const addReserva = async (reserva) => {
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            reserva.usuario = {
+                "id": user.uid,
+                "email": user.email
+            }
+            saveReserva(reserva)
+        } else {
+            console.log('no login')
+        }
+    })
+    return reserva
+}
+
+const saveReserva = async (reserva) => {
+    const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
+    await reservaRefs.doc(reserva.cod).set(reserva)
+}
+
+const fetchReservasByUser = async (userId) => {
+    const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
+    let reservas = []
+    reservaRefs.where('usuario.id', '==', userId).get()
+    .then(snapshot => {
+        if (snapshot.empty) {
+            console.log("No hay reservas")
+        } else {
+            snapshot.forEach(doc => {
+                const data = doc.data();               
+                reservas.push(data)
+               
+            })
+        }
+        return reservas;
+    }).catch(err => {
+        console.log(`Error getting the documents : ${err}`)
+    })
+}
+
+module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser }
