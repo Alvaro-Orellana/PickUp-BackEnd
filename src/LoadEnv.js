@@ -6,4 +6,9 @@ if (process.env.NODE_ENV !== 'production') {
     path: join(__dirname, '../.env'),
     sample: join(__dirname, '../.env.example'),
   })
+}else{
+  config({
+    path: join(__dirname, '../.env'),
+    sample: join(__dirname, '../.env.example'),
+  })
 }
