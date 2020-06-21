@@ -1,8 +1,9 @@
-const { OK } = require('http-status')
+const { OK, INTERNAL_SERVER_ERROR, BAD_REQUEST } = require('http-status')
 const { success } = require('../middlewares/success.middleware')
 const { validateUser } = require('../utils')
 const { error } = require('../middlewares/error.middleware')
-const { fetchReservaByCod, addReserva } = require('../queries/reserva.query')
+const { fetchReservaByCod, addReserva, fetchReservasByUser } = require('../queries/reserva.query')
+const { defaultLimit, defaultOffset } = require('../config/vars')
 
 const test = async (req, res) => {
     try {
@@ -11,15 +12,35 @@ const test = async (req, res) => {
         res.status(OK).json(success(reserva))
     } catch (err) {
         console.log(err)
-        res.status(500).json(error('No se puede registrar', 500))
+        res.status(INTERNAL_SERVER_ERROR).json(error('No se puede registrar', INTERNAL_SERVER_ERROR))
     }
 
 }
 
 const getReservasByUser = async (req, res) => {
-    const { userId } = req.params
-
-    res.status(OK).json(success({}))
+    try {
+        const { userId } = req.params
+        let { limit, offset } = req.query;
+        
+        if(!userId){
+            res.status(BAD_REQUEST).json(error("Se requiere usuario"), BAD_REQUEST);
+        }
+    
+        if(!limit){
+            limit = defaultLimit;
+        }
+        
+        if(!offset){
+            offset = defaultOffset;
+        }
+        const response = await fetchReservasByUser(userId, limit, offset);
+    
+        res.status(OK).json(success({response}));
+    } catch (error) {
+        console.log(err)
+        res.status(INTERNAL_SERVER_ERROR).json(error('Error inesperado', INTERNAL_SERVER_ERROR))
+    }
+   
 }
 
 const busquedaTest = async (req, res) => {

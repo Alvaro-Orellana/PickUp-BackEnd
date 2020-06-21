@@ -5,9 +5,7 @@ const { decodeJwt } = require('../utils')
 const { firebase, admin } = require('../queries/database')
 
 
-
-const authorization = (scope) => (req, res, next) => {
-
+const authorization = (req, res, next) => {
     const header = req.header('Authorization')
     if (!header) {
         return res.status(UNAUTHORIZED).json(error("No header present", UNAUTHORIZED));

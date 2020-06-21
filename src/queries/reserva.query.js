@@ -45,24 +45,25 @@ const saveReserva = async (reserva) => {
     await reservaRefs.doc(reserva.cod).set(reserva)
 }
 
-const fetchReservasByUser = async (userId) => {
+const fetchReservasByUser = async (userId, limit, offset) => {
     const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
     let reservas = []
-    reservaRefs.where('usuario.id', '==', userId).get()
-    .then(snapshot => {
-        if (snapshot.empty) {
-            console.log("No hay reservas")
-        } else {
+    const snapshot = reservaRefs.where('usuario.id', '==', userId).limit(limit).offset(offset).get();
+    
+    if (snapshot.empty) {
+        console.log("Usuario no existe en la base")
+    } else {
+        snapshot.forEach(doc => {
+            const data = doc.data();
             snapshot.forEach(doc => {
                 const data = doc.data();               
                 reservas.push(data)
                
-            })
-        }
-        return reservas;
-    }).catch(err => {
-        console.log(`Error getting the documents : ${err}`)
-    })
+            });
+        })
+    }
+
+   return reservas;
 }
 
 module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser }
