@@ -45,6 +45,30 @@ const saveReserva = async (reserva) => {
     await reservaRefs.doc(reserva.cod).set(reserva)
 }
 
+const fetchReservas = async () => {
+
+    const reservasRefs = db.collection(RESERVAS_COLLECTION)
+    
+    let reservas = []
+    reservaRefs.where('finalizado', '==', false).get()
+        .then(snapshot => {
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    reservas.push({
+                        cod: data.cod,
+
+                    })
+                })
+            }
+            return reservas;
+        }).catch(err => {
+            console.log(`Error getting the document : ${err}`)
+        })
+}
+
+
+
 const fetchReservasByUser = async (userId, limit, offset) => {
     const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
     let reservas = []
@@ -66,4 +90,4 @@ const fetchReservasByUser = async (userId, limit, offset) => {
    return reservas;
 }
 
-module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser }
+module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser, fetchReservas }

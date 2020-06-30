@@ -2,7 +2,7 @@ const { OK, INTERNAL_SERVER_ERROR, BAD_REQUEST } = require('http-status')
 const { success } = require('../middlewares/success.middleware')
 const { validateUser } = require('../utils')
 const { error } = require('../middlewares/error.middleware')
-const { fetchReservaByCod, addReserva, fetchReservasByUser } = require('../queries/reserva.query')
+const { fetchReservaByCod, addReserva, fetchReservasByUser, fetchReservas } = require('../queries/reserva.query')
 const { defaultLimit, defaultOffset } = require('../config/vars')
 
 const test = async (req, res) => {
@@ -48,9 +48,27 @@ const busquedaTest = async (req, res) => {
     res.status(OK).json(success())
 }
 
+const getReservas = async (req, res) => {
+    try {
+        const { userId } = req.params
+        
+        if(!userId){
+            res.status(BAD_REQUEST).json(error("Se requiere usuario"), BAD_REQUEST);
+        }
+
+        const response = await fetchReservas();
+    
+        res.status(OK).json(success({response}));
+    } catch (error) {
+        console.log(err)
+        res.status(INTERNAL_SERVER_ERROR).json(error('Error inesperado', INTERNAL_SERVER_ERROR))
+    }
+   
+}
 
 module.exports = {
     test,
     busquedaTest,
-    getReservasByUser
+    getReservasByUser,
+    getReservas
 }
