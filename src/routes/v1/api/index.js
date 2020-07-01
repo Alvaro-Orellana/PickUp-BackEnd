@@ -7,5 +7,6 @@ const router = Router()
 
 router.use('/reserva', reserva)
 router.use('/weather', weather)
+router.use('/user', user);
 
 module.exports = router

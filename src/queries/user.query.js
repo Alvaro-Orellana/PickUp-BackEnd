@@ -18,7 +18,8 @@ const fetchUserByEmail = async (email) => {
                 created_date: data.created_date,
                 update_date: data.update_date,
                 email: data.email,
-
+                userType: data.userType,
+                vehicleData: data.vehicleData
             }
         })
     }
@@ -26,7 +27,6 @@ const fetchUserByEmail = async (email) => {
     return user;
     
 }
-
 
 const saveUser = async (user) => {
     try {
@@ -39,7 +39,8 @@ const saveUser = async (user) => {
             name: user.name,
             lastname: user.lastname,
             created_date: user.created_date,
-            update_date: user.update_date
+            update_date: user.update_date,
+            userType: 'unknown'
         }
 
         await userRefs.doc(user.email).set(userToSave)
@@ -51,10 +52,16 @@ const saveUser = async (user) => {
 
 const updateUser = async (user) => {
     try {
-        const userRefs = db.collection(USERS_COLLECTION).doc(user.email);
+        const userRefs = db.collection(USERS_COLLECTION).doc(user.email.replace(/"/g,''));
         user.update_date = moment().toString()
-        await userRefs.update(user)
+        await userRefs.update({
+            vehicleData: user.vehicleData || null,
+            userType: user.userType
+        })
+        return await fetchUserByEmail(user.email);
     } catch (error) {
+        console.log("Error");
+        console.log(error);
 
     }
 }

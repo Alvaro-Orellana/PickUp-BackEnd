@@ -41,11 +41,11 @@ const decodeJwt = (jwt) => {
 
 }
 
-const validateEmail = (value) => {
+    const validateEmail = (value) => {
 
-    return /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(value)
-    
-}
+        return /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(value)
+        
+    }
 
 const validateUser = (usuario) => {
     return validateEmail(usuario.email) &&
@@ -56,10 +56,18 @@ const validateUser = (usuario) => {
 
 }
 
+const isValidAddress = (address) => {
+    return address.state &&
+    address.street &&
+    address.number;
+    
+}
+
 
 module.exports = {
     decodeJwt,
     response,
     validateEmail,
-    validateUser
+    validateUser,
+    isValidAddress
 }

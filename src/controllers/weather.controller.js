@@ -1,4 +1,4 @@
-const { OK } = require('http-status')
+const { OK, INTERNAL_SERVER_ERROR } = require('http-status')
 const https = require("https");
 const { success } = require('../middlewares/success.middleware')
 const { error } = require('../middlewares/error.middleware')
@@ -46,7 +46,7 @@ const getWeatherByCords = async (req, res) => {
       
     } catch (err) {
         console.log(err)
-        res.status(500).json(error('No se puede ', 500))
+        res.status(INTERNAL_SERVER_ERROR).json(error('No se puede obtener clima', INTERNAL_SERVER_ERROR))
     }
 
 }

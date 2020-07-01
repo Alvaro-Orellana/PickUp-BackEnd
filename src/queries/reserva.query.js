@@ -1,8 +1,10 @@
-const { admin, firebase } = require('./database')
-const { USERS_COLLECTION, RESERVAS_COLLECTION } = require('../config/vars')
+const moment = require('moment')
+const { v4: uuidv4 } = require('uuid')
+const { admin, db, firebase } = require('./database')
+const { RESERVAS_COLLECTION } = require('../config/vars')
 
 const fetchReservaByCod = async (cod) => {
-    const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
+    const reservaRefs = db.collection(RESERVAS_COLLECTION)
     let reserva = {}
     reservaRefs.where('cod', '==', cod).limit(1).get()
         .then(snapshot => {
@@ -11,7 +13,6 @@ const fetchReservaByCod = async (cod) => {
             } else {
                 snapshot.forEach(doc => {
                     const data = doc.data();
-
                     reserva = {
                         cod: data.cod
                     }
@@ -28,10 +29,8 @@ const fetchReservaByCod = async (cod) => {
 const addReserva = async (reserva) => {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            reserva.usuario = {
-                "id": user.uid,
-                "email": user.email
-            }
+            reserva.creation_date = moment().toString()
+            reserva.status = "Open"
             saveReserva(reserva)
         } else {
             console.log('no login')
@@ -40,30 +39,70 @@ const addReserva = async (reserva) => {
     return reserva
 }
 
+const acceptReserva = async (driver, reservaId) => {
+    const reservaRefs = db.collection(RESERVAS_COLLECTION).doc(reservaId);
+    const reservaExistente = await fetchReservaById(reservaId);
+    if (reservaExistente) {
+        if (reservaExistente.status === "Open") {
+            await reservaRefs.update(
+                {
+                    driver: driver,
+                    status: 'In Progress',
+        
+                });   
+            }
+            return await fetchReservaById(reservaId);
+        }           
+}
+
+const cancelReserva = async (reservaId) => {
+    const reservaRefs = db.collection(RESERVAS_COLLECTION).doc(reservaId);
+   
+    await reservaRefs.update(
+        {                   
+            status: 'Cancel',
+
+        });   
+            
+    return await fetchReservaById(reservaId);
+                
+}
+
+const fetchReservaById = async (reservaId) => {
+    let reserva;
+    const doc = await db.collection(RESERVAS_COLLECTION).doc(reservaId).get();
+    console.log()
+    if (!doc.exists) {
+        console.log("Reserva no existe en la base")
+    } else {      
+        const data = doc.data();
+        reserva = data;       
+    }
+
+    return reserva;
+}
+
 const saveReserva = async (reserva) => {
-    const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
-    await reservaRefs.doc(reserva.cod).set(reserva)
+    const reservaRefs = db.collection(RESERVAS_COLLECTION)
+    await reservaRefs.doc(uuidv4().toString()).set(reserva)
 }
 
 const fetchReservasByUser = async (userId, limit, offset) => {
-    const reservaRefs = firebase.collection(RESERVAS_COLLECTION)
+    const reservaRefs = db.collection(RESERVAS_COLLECTION)
     let reservas = []
-    const snapshot = reservaRefs.where('usuario.id', '==', userId).limit(limit).offset(offset).get();
-    
+    const snapshot = await reservaRefs.where('usuario.id', '==', userId).limit(limit).offset(offset).get();
+
     if (snapshot.empty) {
         console.log("Usuario no existe en la base")
     } else {
         snapshot.forEach(doc => {
             const data = doc.data();
-            snapshot.forEach(doc => {
-                const data = doc.data();               
-                reservas.push(data)
-               
-            });
+            reservas.push(data)
+
         })
     }
 
-   return reservas;
+    return reservas;
 }
 
-module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser }
+module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser, acceptReserva, cancelReserva }

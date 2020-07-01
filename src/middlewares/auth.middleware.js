@@ -24,7 +24,7 @@ const authorization = (req, res, next) => {
                 });
         } else {
             console.log("There is no current user.");
-            return res.status(UNAUTHORIZED).json(error("Invalid token", UNAUTHORIZED));
+            return res.status(UNAUTHORIZED).json(error("Token expired", UNAUTHORIZED));
         }
     }
 };
