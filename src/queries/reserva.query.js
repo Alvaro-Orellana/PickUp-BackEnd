@@ -87,6 +87,30 @@ const saveReserva = async (reserva) => {
     await reservaRefs.doc(uuidv4().toString()).set(reserva)
 }
 
+const fetchReservas = async () => {
+
+    const reservasRefs = db.collection(RESERVAS_COLLECTION)
+    
+    let reservas = []
+    reservaRefs.where('finalizado', '==', false).get()
+        .then(snapshot => {
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    reservas.push({
+                        cod: data.cod,
+
+                    })
+                })
+            }
+            return reservas;
+        }).catch(err => {
+            console.log(`Error getting the document : ${err}`)
+        })
+}
+
+
+
 const fetchReservasByUser = async (userId, limit, offset) => {
     const reservaRefs = db.collection(RESERVAS_COLLECTION)
     let reservas = []
@@ -105,4 +129,8 @@ const fetchReservasByUser = async (userId, limit, offset) => {
     return reservas;
 }
 
+<<<<<<< HEAD
 module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser, acceptReserva, cancelReserva }
+=======
+module.exports = { addReserva, fetchReservaByCod, saveReserva, fetchReservasByUser, fetchReservas }
+>>>>>>> 395754fc3f53a0a9a86ea0d1d7725b6e64fe8716
