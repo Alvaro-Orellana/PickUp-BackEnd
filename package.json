@@ -1,10 +1,13 @@
 {
-  "name": "PickUp_Backend",
+  "name": "pickup_backend",
   "version": "1.0.0",
-  "description": "Codigo Backend para el proyecto" ,
+  "description": "Codigo Backend para el proyecto",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon",
+    "lint": "eslint . --ext .js",
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -16,5 +19,23 @@
   "bugs": {
     "url": "https://github.com/Alvaro-Orellana/PickUp-BackEnd/issues"
   },
-  "homepage": "https://github.com/Alvaro-Orellana/PickUp-BackEnd#readme"
+  "homepage": "https://github.com/Alvaro-Orellana/PickUp-BackEnd#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "firebase": "^7.14.6",
+    "firebase-admin": "^8.12.1",
+    "helmet": "^3.22.0",
+    "http-status": "^1.4.2",
+    "moment": "^2.26.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "path": "^0.12.7",
+    "uuid": "^8.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.1.0"
+  }
 }
