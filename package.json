@@ -29,7 +29,7 @@
     "firebase-admin": "^8.12.1",
     "helmet": "^3.22.0",
     "http-status": "^1.4.2",
-    "moment": "^2.26.0",
+    "moment": "^2.29.2",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
